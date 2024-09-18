@@ -112,14 +112,15 @@
         } else {
             continueBtnn.classList.remove('hidden');
         }
+        wait1.pause(); 
+        wait1.currentTime = 0; 
     }
 
     function hideOverlay() {
         quizOverlay.classList.add('hidden');
         feedback.textContent = '';
         continueBtn.classList.add('hidden');
-        wait1.pause();  // Stop the audio
-        wait1.currentTime = 0;  // Reset the audio to the start
+
     }
 
     continueBtn.addEventListener('click', () => {
