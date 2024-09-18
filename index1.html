@@ -70,7 +70,9 @@
     const continueBtnn = document.getElementById('continueBtn1');
     const scoreElement = document.getElementById('score');
     var wait1 = new Audio('wait1.mp3');
-    wait1.loop = true;  // Enable looping for the audio
+    var betul = new Audio('correct.mp3');
+    var salah = new Audio('wrong.mp3');
+    wait1.loop = true;  
 
     let score = 0;
     let currentQuestionIndex = 0;
@@ -101,20 +103,29 @@
     }
 
     function checkAnswer(selectedIndex, correctIndex) {
-        const isCorrect = selectedIndex === correctIndex;
-        feedback.textContent = isCorrect ? 'Benar!' : 'Jawaban Salah, coba lagi. \n atau';
-        feedback.className = isCorrect ? 'text-green-500' : 'text-red-500';
+    const isCorrect = selectedIndex === correctIndex;
+    feedback.textContent = isCorrect ? 'Benar!' : 'Jawaban Salah, coba lagi. \n atau';
+    feedback.className = isCorrect ? 'text-green-500' : 'text-red-500';
 
-        if (isCorrect) {
-            score++; // Increment the score
-            scoreElement.textContent = `Score: ${score}`; // Update the score display
-            continueBtn.classList.remove('hidden');
-        } else {
-            continueBtnn.classList.remove('hidden');
-        }
-        wait1.pause(); 
-        wait1.currentTime = 0; 
+    options.querySelectorAll('button').forEach(button => {
+        button.disabled = true;
+    });
+
+    if (isCorrect) {
+        score++; 
+        scoreElement.textContent = `Score: ${score}`; 
+        continueBtn.classList.remove('hidden');
+        betul.currentTime = 0; 
+        betul.play();
+    } else {
+        continueBtnn.classList.remove('hidden');
+        salah.currentTime = 0; 
+        salah.play(); 
     }
+
+    wait1.pause(); 
+    wait1.currentTime = 0; 
+}
 
     function hideOverlay() {
         quizOverlay.classList.add('hidden');
