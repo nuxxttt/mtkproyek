@@ -11,30 +11,30 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
-        body {
-            width: 100%;
-        }
-        #quizOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        .quiz-content {
-            max-width: 100%;
-            width: 100%;
-            max-height: 100vh;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-        @media (min-width: 640px) {
-            .quiz-content {
-                max-width: 28rem;
-            }
-        }
+    body {
+        width: 100%;
+    }
+
+
+    #quizOverlay {
+    border: 2px solid black;  /* Corrected border syntax */
+    position: fixed;
+    margin-bottom: 5px;
+    right: 0;
+    bottom: 0;
+    width: 500px; /* Sidebar width */
+    z-index: 1000;
+    overflow-y: auto;
+    background-color: white; /* Ensure background is visible */
+    padding: 1rem;  /* Add padding for better spacing */
+    border-radius: 0.5rem; /* Optional: add rounded corners */
+}
+    .quiz-content {
+        width: 100%;
+        max-height: 100vh;
+        overflow-y: auto;
+        padding: 1rem;
+    }
         #chatMessages {
             height: 200px;
             overflow-y: auto;
@@ -187,91 +187,65 @@
     const playerContainer = document.getElementById('playerContainer');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-    fullscreenBtn.addEventListener('click', () => {
-        if (!playerContainer.classList.contains('fullscreen-like')) {
-            playerContainer.classList.add('fullscreen-like');
-            quizOverlay.classList.add('quiz-overlay-fullscreen');
-        } else {
-            playerContainer.classList.remove('fullscreen-like');
-            quizOverlay.classList.remove('quiz-overlay-fullscreen');
-        }
-    });
     let score = 0;
     let currentQuestionIndex = 0;
 
 
     player.on('timeupdate', () => {
-        const currentTime = Math.floor(player.currentTime);
-        const question = questions[currentQuestionIndex];
+            const currentTime = Math.floor(player.currentTime);
+            const question = questions[currentQuestionIndex];
 
-        if (question && currentTime === question.time) {
-            player.pause();
-            showQuestion(question);
-        }
-    });
-
-    function showQuestion(question) {
-        quizOverlay.classList.remove('hidden');
-        questionText.innerHTML = question.question;
-        options.innerHTML = '';
-
-        question.options.forEach((option, index) => {
-            const button = document.createElement('button');
-            button.textContent = option;
-            button.className = 'w-full text-left p-2 rounded bg-gray-200 hover:bg-gray-300';
-            button.onclick = () => checkAnswer(index, question.correctAnswer);
-            options.appendChild(button);
+            if (question && currentTime === question.time) {
+                player.pause();
+                showQuestion(question);
+            }
         });
-    }
 
-    function checkAnswer(selectedIndex, correctIndex) {
-        const isCorrect = selectedIndex === correctIndex;
-        feedback.textContent = isCorrect ? 'Benar!' : 'Jawaban Salah, coba lagi. \n atau';
-        feedback.className = isCorrect ? 'text-green-500' : 'text-red-500';
+        function showQuestion(question) {
+            quizOverlay.classList.remove('hidden');
+            questionText.innerHTML = question.question;
+            options.innerHTML = '';
 
-        if (isCorrect) {
-            score++;
-            scoreElement.textContent = `Score: ${score}`;
-            continueBtn.classList.remove('hidden');
-            options.querySelectorAll('button').forEach(btn => btn.disabled = true);
-            continueBtnn.classList.add('hidden');
-        } else if (!isCorrect) {
-            continueBtnn.classList.remove('hidden');
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'w-full text-left p-2 rounded bg-gray-200 hover:bg-gray-300';
+                button.onclick = () => checkAnswer(index, question.correctAnswer);
+                options.appendChild(button);
+            });
         }
-        scoreElement.classList.remove('hidden');
-    }
 
-    continueBtn.addEventListener('click', () => {
-        quizOverlay.classList.add('hidden');
-        feedback.textContent = '';
-        continueBtn.classList.add('hidden');
-        currentQuestionIndex++;
-        player.play();
-    });
+        function checkAnswer(selectedIndex, correctIndex) {
+            const isCorrect = selectedIndex === correctIndex;
+            feedback.textContent = isCorrect ? 'Benar!' : 'Jawaban Salah, coba lagi. \n atau';
+            feedback.className = isCorrect ? 'text-green-500' : 'text-red-500';
 
-    continueBtnn.addEventListener('click', () => {
-        quizOverlay.classList.add('hidden');
-        feedback.textContent = '';
-        continueBtn.classList.add('hidden');
-        currentQuestionIndex++;
-        player.play();
-    });
-
-    // Fullscreen event handling
-    document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement && document.fullscreenElement.id === 'player') {
-            // Video is in fullscreen mode
-            quizOverlay.style.position = 'fixed';
-            quizOverlay.style.top = '0';
-            quizOverlay.style.left = '0';
-            quizOverlay.style.right = '0';
-            quizOverlay.style.bottom = '0';
-            quizOverlay.style.zIndex = '1000';
-        } else {
-            // Exit fullscreen mode
-            quizOverlay.style.position = 'absolute';
+            if (isCorrect) {
+                score++;
+                scoreElement.textContent = `Score: ${score}`;
+                continueBtn.classList.remove('hidden');
+                options.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                continueBtnn.classList.add('hidden');
+            } else if (!isCorrect) {
+                continueBtnn.classList.remove('hidden');
+            }
+            scoreElement.classList.remove('hidden')
         }
-    });
+
+        continueBtn.addEventListener('click', () => {
+            quizOverlay.classList.add('hidden');
+            feedback.textContent = '';
+            continueBtn.classList.add('hidden');
+            currentQuestionIndex++;
+            player.play();
+        });
+        continueBtnn.addEventListener('click', () => {
+            quizOverlay.classList.add('hidden');
+            feedback.textContent = '';
+            continueBtn.classList.add('hidden');
+            currentQuestionIndex++;
+            player.play();
+        });
 
         // Chatbot functionality
         const chatMessages = document.getElementById('chatMessages');
