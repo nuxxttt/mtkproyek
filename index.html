@@ -186,6 +186,10 @@
     const scoreElement = document.getElementById('score');
     const playerContainer = document.getElementById('playerContainer');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
+    var wait1 = new Audio('wait1.mp3');
+    var betul = new Audio('correct.mp3');
+    var salah = new Audio('wrong.mp3');
+
 
     let score = 0;
     let currentQuestionIndex = 0;
@@ -205,6 +209,7 @@
             quizOverlay.classList.remove('hidden');
             questionText.innerHTML = question.question;
             options.innerHTML = '';
+            wait1.play();  
 
             question.options.forEach((option, index) => {
                 const button = document.createElement('button');
@@ -226,10 +231,16 @@
                 continueBtn.classList.remove('hidden');
                 options.querySelectorAll('button').forEach(btn => btn.disabled = true);
                 continueBtnn.classList.add('hidden');
+                betul.currentTime = 0; 
+                betul.play()
             } else if (!isCorrect) {
-                continueBtnn.classList.remove('hidden');
+                salah.currentTime = 0; 
+                salah.play()
             }
             scoreElement.classList.remove('hidden')
+        wait1.pause(); 
+        wait1.currentTime = 0; 
+
         }
 
         continueBtn.addEventListener('click', () => {
